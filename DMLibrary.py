@@ -3,9 +3,11 @@ import numpy as np
 import sklearn as sk
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
-#from sklearn.preprocessing import MinScaler
-#from sklearn.preprocessing import MaxScaler
+#from sklearn.preprocessing import maxabs_scale
+#from sklearn.preprocessing import min_scale
+from sklearn.preprocessing import LabelEncoder
 from sklearn.datasets import load_iris
+import matplotlib.pyplot as plt
 
 
 class Preprocessor:
@@ -25,11 +27,12 @@ class Preprocessor:
             pass
         if Method=="maxs":
            pass
-    def encode(self,data):
-        pass
-
+    #def encode(self,data,*cols):
+        #le=LabelEncoder()
+        #for col in cols:
+            
 X,y = load_iris(return_X_y = True) # get data inputs and outputs
 S = Preprocessor()
-rescaledX = S.Scale("mms",X)
+rescaledX = S.Scale("sc",X)
 np.set_printoptions(precision=3) 
 print(rescaledX[0:5,:]) 
