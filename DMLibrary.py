@@ -49,23 +49,28 @@ class Preprocessor:
 
 
 class Classifier:
-    knnModel = KNeighborsClassifier(n_neighbors=3)
+    knnModel = KNeighborsClassifier()
     dtModel = DecisionTreeClassifier()
     bcModel = GaussianNB()
-    rfModel = RandomForestClassifier(n_estimators=100)
+    rfModel = RandomForestClassifier()
     y_pred = 0
-
     def __init__(self):
         pass
 
     def fit(self, Method, X_train, y_train):
         if Method == "knn":
+            print("please enter number of neighbours: ")
+            n_neighbors = int(input())
+            self.knnModel = KNeighborsClassifier(n_neighbors=n_neighbors)
             self.knnModel.fit(X_train, y_train)
         elif Method == "dt":
             self.dtModel = self.dtModel.fit(X_train, y_train)
         elif Method == "bc":
             self.bcModel.fit(X_train, y_train)
         elif Method == "rf":
+            print("please enter number of estimators: ")
+            n_estimators = int(input())
+            self.rfModel = RandomForestClassifier(n_estimators=n_estimators)
             self.rfModel.fit(X_train, y_train)
 
     def predict(self, Method, X_test):
@@ -81,11 +86,10 @@ class Classifier:
     def score(self, y_test):
         print("Accuracy", metrics.accuracy_score(y_test, self.y_pred))
 
-
 class Regressor:
     linear = LinearRegression()
     dtRegressor = DecisionTreeRegressor()
-    knnRegressor = KNeighborsRegressor(n_neighbors=2)
+    knnRegressor = KNeighborsRegressor()
     y_pred = 0
 
     def __init__(self):
@@ -97,9 +101,11 @@ class Regressor:
         elif Method == "dt":
             self.dtRegressor = self.dtRegressor.fit(X_train, y_train)   
         elif Method == "knn":
+            print("please enter number of neighbours: ")
+            n_neighbors = int(input())
+            self.knnRegressor = KNeighborsRegressor(n_neighbors=n_neighbors)
             self.knnRegressor.fit(X_train, y_train)    
-
-
+            
     def predict(self, Method, X_test):
         if Method == "line":
             self.y_pred = self.linear.predict(X_test)
@@ -130,9 +136,7 @@ class Cluster:
         self.y_kmeans = self.kmeans.predict(X)
         print(self.y_kmeans)
 
-
-                                      # The Program Starts Here 
-
+# The Program Starts Here 
 
 print("Select The Dataset :")
 print("1. Iris")
@@ -162,12 +166,6 @@ elif datasetChoice == "3":
     X['color'] = preprocessor.encode(X['color'])  
     y = X.pop('price')  # output column
 
-
-
-    
-
-
-
 print("Select The Desirable Scaling Algorithm :")
 print("1. Standard Scalar")
 print("2. Min Max Scalar")
@@ -184,8 +182,6 @@ elif scalarChoice == "3":
     rescaledX = preprocessor.scale("maxs", X)
 elif scalarChoice == "4":
     rescaledX = preprocessor.scale("mins", X)
-
-
 # np.set_printoptions(precision=3)
 # print(rescaledX[0:5,:])
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33)
@@ -239,17 +235,14 @@ elif algoChoice == "2":
         choice = "dt"
     elif choice == "4":
         choice = "knn"
-
+        
     regressor.fit(choice, X_train, y_train)
     regressor.predict(choice, X_test)
     regressor.score(choice,y_test)
 
 elif algoChoice == "3":
-    
     print("Enter The Value of K")
     k=input()
     cluster = Cluster(k)
     cluster.fit(X)
     cluster.predict(X)
-   
-
