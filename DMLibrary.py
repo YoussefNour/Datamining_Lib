@@ -19,6 +19,7 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import seaborn as sns; sns.set()  # for plot styling
+from sklearn.preprocessing import PolynomialFeatures
 
 
 class Preprocessor:
@@ -54,6 +55,7 @@ class Classifier:
     bcModel = GaussianNB()
     rfModel = RandomForestClassifier()
     y_pred = 0
+    
     def __init__(self):
         pass
 
@@ -72,7 +74,7 @@ class Classifier:
             n_estimators = int(input())
             self.rfModel = RandomForestClassifier(n_estimators=n_estimators)
             self.rfModel.fit(X_train, y_train)
-
+            
     def predict(self, Method, X_test):
         if Method == "knn":
             self.y_pred = self.knnModel.predict(X_test)
@@ -82,19 +84,17 @@ class Classifier:
             self.y_pred = self.bcModel.predict(X_test)
         elif Method == "rf":
             self.y_pred = self.rfModel.predict(X_test)
-
     def score(self, y_test):
         print("Accuracy", metrics.accuracy_score(y_test, self.y_pred))
-
 class Regressor:
     linear = LinearRegression()
     dtRegressor = DecisionTreeRegressor()
     knnRegressor = KNeighborsRegressor()
     y_pred = 0
-
+    poly = PolynomialFeatures(degree = 4)
+    
     def __init__(self):
         pass
-
     def fit(self, Method, X_train, y_train):
         if Method == "line":
             self.linear.fit(X_train, y_train)
@@ -104,8 +104,12 @@ class Regressor:
             print("please enter number of neighbours: ")
             n_neighbors = int(input())
             self.knnRegressor = KNeighborsRegressor(n_neighbors=n_neighbors)
-            self.knnRegressor.fit(X_train, y_train)    
-            
+            self.knnRegressor.fit(X_train, y_train)
+        elif Method == "poly":
+            X_poly = self.poly.fit_transform(X_train)
+            self.poly.fit(X_poly,y_train)
+            self.linear.fit(X_poly, y_train) 
+        
     def predict(self, Method, X_test):
         if Method == "line":
             self.y_pred = self.linear.predict(X_test)
@@ -113,19 +117,18 @@ class Regressor:
             self.y_pred = self.dtRegressor.predict(X_test)
         elif Method == "knn":
             self.y_pred = self.knnRegressor.predict(X_test)
-
+        elif Method == "poly":
+            self.y_pred = self.linear.predict(self.poly.fit_transform(X_test)) 
+    
     def score(self, Method, y_test):
         if Method == "line":
             print("Accuracy", metrics.accuracy_score(y_test, self.y_pred.round()))
         else:
-            print("Accuracy", metrics.accuracy_score(y_test, self.y_pred.round()))
-
+            print("Accuracy", metrics.accuracy_score(y_test, self.y_pred))
 
 class Cluster:
-
     kmeans = 0
     y_kmeans = 0
-
     def __init__(self,k):
       self.kmeans = KMeans(n_clusters=int(k)) 
 
@@ -185,7 +188,6 @@ elif scalarChoice == "4":
 # np.set_printoptions(precision=3)
 # print(rescaledX[0:5,:])
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33)
-
 
 print("What You want to apply on your Dataset  :")
 print("1. Classification")
