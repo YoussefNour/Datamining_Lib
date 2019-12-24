@@ -95,6 +95,7 @@ class Regressor:
     
     def __init__(self):
         pass
+    
     def fit(self, Method, X_train, y_train):
         if Method == "line":
             self.linear.fit(X_train, y_train)
@@ -122,6 +123,8 @@ class Regressor:
     
     def score(self, Method, y_test):
         if Method == "line":
+            print("Accuracy", metrics.accuracy_score(y_test, self.y_pred.round()))
+        elif Method == "poly":
             print("Accuracy", metrics.accuracy_score(y_test, self.y_pred.round()))
         else:
             print("Accuracy", metrics.accuracy_score(y_test, self.y_pred))
