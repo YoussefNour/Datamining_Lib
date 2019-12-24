@@ -54,6 +54,7 @@ class Classifier:
     dtModel = DecisionTreeClassifier()
     bcModel = GaussianNB()
     rfModel = RandomForestClassifier()
+    #creates (for example thousands of) random decision trees and then it gets the majority votes then the final random forest returns the predicted target, it can be used in calssification by majority voting and regression by getting the average, but it is more preferable to  use it in classification
     y_pred = 0
     
     def __init__(self):
